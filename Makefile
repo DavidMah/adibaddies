@@ -21,6 +21,7 @@ serial:
 upload_and_serial: upload serial
 
 push_github:
+	git add . -A
 	git commit -am "moar stuff"
 	git pull origin master --rebase
 	git push origin master
