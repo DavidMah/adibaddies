@@ -14,7 +14,8 @@ upload:
 	cd $(SKETCH) && arduino-cli compile --fqbn arduino:avr:uno
 	cd $(SKETCH) && arduino-cli upload --port $(port) --fqbn arduino:avr:uno
 
-serial: # exit by typing ~.
+serial:
+	echo "Exit by typing: ~."
 	sudo cu -s 9600 -l /dev/cu.usbmodem142401
 
 upload_and_serial: upload serial
