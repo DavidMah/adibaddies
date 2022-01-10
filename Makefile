@@ -15,3 +15,9 @@ push_github:
 	git commit -am "moar stuff"
 	git pull origin master --rebase
 	git push origin master
+
+port:
+	echo $(port)
+
+serial:
+	sudo cu -s 9600 -l /dev/cu.usbmodem142401
