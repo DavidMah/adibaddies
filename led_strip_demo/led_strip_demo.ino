@@ -4,7 +4,7 @@
 #define NUM_LEDS    144
 #define FLIP_INTERVAL 2
 #define SNAKE_LENGTH 10
-#define ITERATION_DURATION 50 // milliseconds
+#define ITERATION_DURATION 500 // milliseconds
 
 CRGB leds[NUM_LEDS];
 
@@ -70,7 +70,7 @@ void loop() {
       green = secondaryColor[1];
       blue = secondaryColor[2];
     }
-    
+
     leds[ledIndex] = CRGB(red, green, blue);
   }
   FastLED.show();
