@@ -5,19 +5,21 @@ install:
 	arduino-cli core update-index
 	arduino-cli core install arduino:avr
 
+port:
+	echo $(port)
+
 # Example: make upload led_strip_demo
 upload:
 	echo "Uploading for sketch: $(SKETCH)"
 	cd $(SKETCH) && arduino-cli compile --fqbn arduino:avr:uno
 	cd $(SKETCH) && arduino-cli upload --port $(port) --fqbn arduino:avr:uno
 
+serial: # exit by typing ~.
+	sudo cu -s 9600 -l /dev/cu.usbmodem142401
+
+upload_and_serial: upload serial
+
 push_github:
 	git commit -am "moar stuff"
 	git pull origin master --rebase
 	git push origin master
-
-port:
-	echo $(port)
-
-serial:
-	sudo cu -s 9600 -l /dev/cu.usbmodem142401

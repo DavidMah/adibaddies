@@ -4,7 +4,7 @@
 #define NUM_LEDS    144
 #define FLIP_INTERVAL 2
 #define SNAKE_LENGTH 10
-#define ITERATION_DURATION 500 // milliseconds
+#define ITERATION_DURATION 10 // milliseconds
 
 CRGB leds[NUM_LEDS];
 
