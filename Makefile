@@ -13,5 +13,5 @@ upload:
 
 push_github:
 	git commit -am "moar stuff"
-	git pull --rebase
+	git pull origin master --rebase
 	git push origin master
