@@ -10,4 +10,6 @@
 
 void nes_controller_setup();
 
+void nes_controller_reloadState();
+
 boolean nes_controller_buttonIsHeld(int button);

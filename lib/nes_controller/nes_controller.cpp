@@ -5,6 +5,18 @@
 #define NES_CLOCK_PIN 2
 #define NES_LATCH_PIN 3
 
+#define A_BUTTON         nes_controller_A_BUTTON         
+#define B_BUTTON         nes_controller_B_BUTTON         
+#define SELECT_BUTTON    nes_controller_SELECT_BUTTON    
+#define START_BUTTON     nes_controller_START_BUTTON     
+#define UP_BUTTON        nes_controller_UP_BUTTON        
+#define DOWN_BUTTON      nes_controller_DOWN_BUTTON      
+#define LEFT_BUTTON      nes_controller_LEFT_BUTTON      
+#define RIGHT_BUTTON     nes_controller_RIGHT_BUTTON     
+
+
+byte nesRegister = 0;
+
 void nes_controller_setup() {
   // Set appropriate pins to inputs
   pinMode(NES_DATA_PIN, INPUT);
@@ -38,46 +50,46 @@ byte readNesController() {
 
   // Clock the next bit which is the B button and determine its state just like
   // we did above.
-  digitalWrite(NES_CLOCK, HIGH);
-  digitalWrite(NES_CLOCK, LOW);
+  digitalWrite(NES_CLOCK_PIN, HIGH);
+  digitalWrite(NES_CLOCK_PIN, LOW);
   if (digitalRead(NES_DATA_PIN) == LOW)
     bitClear(tempData, B_BUTTON);
 
   // Now do this for the rest of them!
 
   // Select button
-  digitalWrite(NES_CLOCK, HIGH);
-  digitalWrite(NES_CLOCK, LOW);
+  digitalWrite(NES_CLOCK_PIN, HIGH);
+  digitalWrite(NES_CLOCK_PIN, LOW);
   if (digitalRead(NES_DATA_PIN) == LOW)
     bitClear(tempData, SELECT_BUTTON);
 
   // Start button
-  digitalWrite(NES_CLOCK, HIGH);
-  digitalWrite(NES_CLOCK, LOW);
+  digitalWrite(NES_CLOCK_PIN, HIGH);
+  digitalWrite(NES_CLOCK_PIN, LOW);
   if (digitalRead(NES_DATA_PIN) == LOW)
     bitClear(tempData, START_BUTTON);
 
   // Up button
-  digitalWrite(NES_CLOCK, HIGH);
-  digitalWrite(NES_CLOCK, LOW);
+  digitalWrite(NES_CLOCK_PIN, HIGH);
+  digitalWrite(NES_CLOCK_PIN, LOW);
   if (digitalRead(NES_DATA_PIN) == LOW)
     bitClear(tempData, UP_BUTTON);
 
   // Down button
-  digitalWrite(NES_CLOCK, HIGH);
-  digitalWrite(NES_CLOCK, LOW);
+  digitalWrite(NES_CLOCK_PIN, HIGH);
+  digitalWrite(NES_CLOCK_PIN, LOW);
   if (digitalRead(NES_DATA_PIN) == LOW)
     bitClear(tempData, DOWN_BUTTON);
 
   // Left button
-  digitalWrite(NES_CLOCK, HIGH);
-  digitalWrite(NES_CLOCK, LOW);
+  digitalWrite(NES_CLOCK_PIN, HIGH);
+  digitalWrite(NES_CLOCK_PIN, LOW);
   if (digitalRead(NES_DATA_PIN) == LOW)
-    bitClear(tempData, LEFT_BUTTON);  
+    bitClear(tempData, LEFT_BUTTON);
 
   // Right button
-  digitalWrite(NES_CLOCK, HIGH);
-  digitalWrite(NES_CLOCK, LOW);
+  digitalWrite(NES_CLOCK_PIN, HIGH);
+  digitalWrite(NES_CLOCK_PIN, LOW);
   if (digitalRead(NES_DATA_PIN) == LOW)
     bitClear(tempData, RIGHT_BUTTON);
 
@@ -86,7 +98,10 @@ byte readNesController() {
   return tempData;
 }
 
+void nes_controller_reloadState() {
+  nesRegister = readNesController();
+}
+
 boolean nes_controller_buttonIsHeld(int button) {
-  byte nesRegister = readNesController();
   return bitRead(nesRegister, button) == 0;
 }

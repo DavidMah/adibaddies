@@ -77,15 +77,14 @@
 // Here we have a bunch of constants that will become clearer when we look at the
 // readNesController() function. Basically, we will use these contents to clear
 // a bit. These are chosen according to the table above.
-#define A_BUTTON         0
-#define B_BUTTON         1
-#define SELECT_BUTTON    2
-#define START_BUTTON     3
-#define UP_BUTTON        4
-#define DOWN_BUTTON      5
-#define LEFT_BUTTON      6
-#define RIGHT_BUTTON     7
-
+const int A_BUTTON         = 0;
+const int B_BUTTON         = 1;
+const int SELECT_BUTTON    = 2;
+const int START_BUTTON     = 3;
+const int UP_BUTTON        = 4;
+const int DOWN_BUTTON      = 5;
+const int LEFT_BUTTON      = 6;
+const int RIGHT_BUTTON     = 7;
 
 //===============================================================================
 //  Variables
@@ -134,38 +133,36 @@ void loop()
   
   // Slight delay before we debug what was pressed so we don't spam the
   // serial monitor.
-  // delay(180);
+  delay(180);
   
   // To give you an idea on how to use this data to control things for your
   // next project, look through the serial terminal code below. Basically,
   // just choose a bit to look at and decide what to do whether HIGH (not pushed)
   // or LOW (pushed). What is nice about this test code is that we mapped all
   // of the bits to the actual button name so no useless memorizing!
-  if (buttonIsHeld(nesRegister, A_BUTTON))
-    Serial.println("A_BUTTON");
+  if (bitRead(nesRegister, A_BUTTON) == 0)
+    Serial.println("JUMP!");
     
-  if (buttonIsHeld(nesRegister, B_BUTTON))
-    Serial.println("B_BUTTON");
+  if (bitRead(nesRegister, B_BUTTON) == 0)
+    Serial.println("PUNCH!");
     
-  if (buttonIsHeld(nesRegister, START_BUTTON))
-    Serial.println("START_BUTTON ACTIVATED");
+  if (bitRead(nesRegister, START_BUTTON) == 0)
+    Serial.println("DOOMSDAY ACTIVATED");
   
-  if (buttonIsHeld(nesRegister, SELECT_BUTTON))
-    Serial.println("SELECT_BUTTON");
+  if (bitRead(nesRegister, SELECT_BUTTON) == 0)
+    Serial.println("WHY DON'T YOU MAP SOMETHING HERE?");
     
-  if (buttonIsHeld(nesRegister, UP_BUTTON))
-    Serial.println("UP_BUTTON");
+  if (bitRead(nesRegister, UP_BUTTON) == 0)
+    Serial.println("...OR HERE?");
     
-  if (buttonIsHeld(nesRegister, DOWN_BUTTON))
-    Serial.println("DOWN_BUTTON");
+  if (bitRead(nesRegister, DOWN_BUTTON) == 0)
+    Serial.println("PLAY WITH THE CODE ALREADY!");
     
-  if (buttonIsHeld(nesRegister, LEFT_BUTTON))
-    Serial.println("LEFT_BUTTON");  
+  if (bitRead(nesRegister, LEFT_BUTTON) == 0)
+    Serial.println("MAKE SOMETHING WITH THIS!");  
   
-  if (buttonIsHeld(nesRegister, RIGHT_BUTTON))
-    Serial.println("RIGHT_BUTTON");
-
-  delay(10);
+  if (bitRead(nesRegister, RIGHT_BUTTON) == 0)
+    Serial.println("GOOD LUCK WITH YOUR PROJECT ");
 }
 
 //===============================================================================
@@ -242,8 +239,3 @@ byte readNesController()
   return tempData;
 }
 
-
-
-boolean buttonIsHeld(byte nesRegister, int button) {
-  return bitRead(nesRegister, button) == 0;
-}
