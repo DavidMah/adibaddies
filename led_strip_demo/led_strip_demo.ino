@@ -4,7 +4,8 @@
 #define NUM_LEDS    144
 #define FLIP_INTERVAL 2
 #define SNAKE_LENGTH 10
-#define ITERATION_DURATION 10 // milliseconds
+#define ITERATION_DURATION 25 // milliseconds
+#define ITERATIONS_WITHIN_ERA 100
 
 CRGB leds[NUM_LEDS];
 
@@ -15,7 +16,6 @@ int primaryColor[3] = {0, 0, 0};
 int secondaryColor[3] = {0, 0, 0};
 
 void setup() {
-
   FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
   Serial.begin(9600);
   iteration = 0;
@@ -40,32 +40,30 @@ void loop() {
       // isPrimaryColor = !isPrimaryColor;  
     }
 
-    int iterationWithinEra = iteration % (255 * 3);
-    int chapter = iterationWithinEra / 255;
-    int iterationWithinChapter = iteration % 255;
+    int iterationWithinEra = (iteration + (ledIndex*5) + (3*iteration)) % (ITERATIONS_WITHIN_ERA * 3);
+    int chapter = iterationWithinEra / ITERATIONS_WITHIN_ERA;
+    int iterationWithinChapter = iterationWithinEra % ITERATIONS_WITHIN_ERA;
     primaryColor[0] = (
       chapter == 0 ? iterationWithinChapter :
-      chapter == 1 ? 255 - iterationWithinChapter :
+      chapter == 1 ? ITERATIONS_WITHIN_ERA - iterationWithinChapter :
       0
     );
     primaryColor[1] = (
       chapter == 0 ? 0 :
       chapter == 1 ? iterationWithinChapter :
-      255 - iterationWithinChapter
+      ITERATIONS_WITHIN_ERA - iterationWithinChapter
     );
     primaryColor[2] = (
-      chapter == 0 ? 255 - iterationWithinChapter :
+      chapter == 0 ? ITERATIONS_WITHIN_ERA - iterationWithinChapter :
       chapter == 1 ? 0 :
       iterationWithinChapter
     );
 
-
-    
     if (isPrimaryColor) {
       red = primaryColor[0];
       green = primaryColor[1];
       blue = primaryColor[2];
-    } else {      
+    } else {
       red = secondaryColor[0];
       green = secondaryColor[1];
       blue = secondaryColor[2];
