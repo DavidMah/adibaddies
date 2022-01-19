@@ -5,7 +5,8 @@
 #define FLIP_INTERVAL 2
 #define SNAKE_LENGTH 10
 #define ITERATION_DURATION 25 // milliseconds
-#define ITERATIONS_WITHIN_ERA 100
+#define ITERATIONS_WITHIN_ERA 255
+#define BRIGHTNESS 0.1
 
 CRGB leds[NUM_LEDS];
 
@@ -68,6 +69,10 @@ void loop() {
       green = secondaryColor[1];
       blue = secondaryColor[2];
     }
+
+		red = int(red * BRIGHTNESS);
+		blue = int(blue * BRIGHTNESS);
+		green = int(green * BRIGHTNESS);
 
     leds[ledIndex] = CRGB(red, green, blue);
   }

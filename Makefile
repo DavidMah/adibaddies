@@ -4,7 +4,7 @@ install:
 	@if [ "$(uname)" = "Linux" ]; then\
 		sudo snap install arduino-cli;\
 	fi
-	@if [ "$(uname)" = "Darwinn" ]; then \
+	@if [ "$(uname)" = "Darwin" ]; then \
 		brew update && brew install arduino-cli \
 	fi
 	arduino-cli core update-index
@@ -20,8 +20,8 @@ upload:
 	cd $(SKETCH) && sudo arduino-cli upload --port $(port) --fqbn arduino:avr:uno
 
 serial:
-	echo "Exit by typing: ~."
-	sudo cu -s 9600 -l $(port)
+	echo "Make sure to exit when done. The Serial port cannot be used concurrently, which includes uploading sketches"
+	sudo putty $(port) -serial -sercfg 9600,8,n,1,N &
 
 upload_and_serial: upload serial
 
