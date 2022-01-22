@@ -6,7 +6,10 @@
 #define SNAKE_LENGTH 10
 #define ITERATION_DURATION 25 // milliseconds
 #define ITERATIONS_WITHIN_ERA 255
-#define BRIGHTNESS 0.1
+
+#define ENABLE_ROTARY false
+#define ROTARY_CLOCK_PIN 9
+#define ROTARY_DT_PIN 8
 
 CRGB leds[NUM_LEDS];
 
@@ -16,13 +19,42 @@ float secondsSoFar = 0;
 int primaryColor[3] = {0, 0, 0};
 int secondaryColor[3] = {0, 0, 0};
 
+int rotaryPosition = 10;
+int rotaryRotation;
+int rotaryValue;
+boolean rotaryLeftRight;
+
 void setup() {
   FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
   Serial.begin(9600);
   iteration = 0;
+
+  if (ENABLE_ROTARY) {
+    pinMode(ROTARY_CLOCK_PIN, INPUT);
+    pinMode(ROTARY_DT_PIN, INPUT);
+    rotaryRotation = digitalRead(ROTARY_CLOCK_PIN);
+  }
 }
 
 void loop() {
+  float brightness;
+  if (ENABLE_ROTARY) {
+    rotaryValue = digitalRead(ROTARY_CLOCK_PIN);
+    if (rotaryValue != rotaryRotation) {
+      if (digitalRead(ROTARY_DT_PIN) != rotaryValue) {
+        rotaryPosition += 1;
+        rotaryLeftRight = true;
+      } else {
+        rotaryPosition -= 1;
+        rotaryLeftRight = false;
+      }
+    }
+    brightness = min(max((rotaryPosition + 10.0) / 20.0, 0), 20);
+    rotaryRotation = rotaryValue;
+  } else {
+    brightness = 1.0;
+  }
+
   int litUpIndex = iteration % NUM_LEDS;
 
   for (int ledIndex = 0; ledIndex < NUM_LEDS; ledIndex +=1 ) {
@@ -70,9 +102,9 @@ void loop() {
       blue = secondaryColor[2];
     }
 
-		red = int(red * BRIGHTNESS);
-		blue = int(blue * BRIGHTNESS);
-		green = int(green * BRIGHTNESS);
+		red = int(red * brightness);
+		blue = int(blue * brightness);
+		green = int(green * brightness);
 
     leds[ledIndex] = CRGB(red, green, blue);
   }

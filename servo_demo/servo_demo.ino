@@ -1,17 +1,17 @@
 #include <Servo.h>
 
+#define SERVO_PIN 6
+
 Servo servo;
 
 void setup() {
-  servo.attach(9);
+  Serial.begin(9600);
+  servo.attach(SERVO_PIN);
 }
 void loop() {
-	servo.write(0);
-	delay(1000);
-	servo.write(90);
-	delay(1000);
-	servo.write(180);
-	delay(1000);
-	servo.write(270);
-	delay(1000);
+  for (int i = 0; i < 180; i += 10) {
+    Serial.println(i);
+    servo.write(i);
+    delay(1000);
+  }
 }
