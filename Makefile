@@ -19,15 +19,22 @@ install:
 port:
 	echo $(port)
 
-# Example: make upload led_strip_demo
-upload:
-	echo "Uploading for sketch: $(SKETCH)"
-	cd $(SKETCH) && arduino-cli compile --fqbn $(fqbn) --libraries ../lib/FastLED-3.5.0 --libraries ../lib/Servo-1.1.8 $(COMPILE_ARGS)
-	cd $(SKETCH) && sudo arduino-cli upload --port $(port) --fqbn $(fqbn)
-
 serial:
 	echo "Make sure to exit when done. The Serial port cannot be used concurrently, which includes uploading sketches"
 	sudo putty $(port) -serial -sercfg 9600,8,n,1,N &
+
+compile:
+	cd $(SKETCH) && \
+		arduino-cli compile \
+			--fqbn $(fqbn) \
+			$(shell find lib -maxdepth 1 -exec echo "--libraries ../{}" \;) \
+			$(shell find lib_vendored -maxdepth 1 -exec echo "--libraries ../{}" \;) \
+			$(COMPILE_ARGS)
+
+# Example: make upload led_strip_demo
+upload: compile
+	echo "Uploading for sketch: $(SKETCH)"
+	cd $(SKETCH) && sudo arduino-cli upload --port $(port) --fqbn $(fqbn)
 
 upload_and_serial: upload serial
 
@@ -38,5 +45,5 @@ push_github: format
 	git push origin master
 
 format:
-	astyle lib/*/*.cpp
+	astyle lib/*/*/*.cpp
 	astyle */*.ino
