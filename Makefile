@@ -6,7 +6,7 @@ fqbn := $(shell arduino-cli board list --format yaml | yq eval -o json | jq -r '
 install:
 	@if [ "$(uname)" = "Linux" ]; then\
 		sudo snap install arduino-cli yq; \
-		sudo apt update && apt install -y jq \
+		sudo apt update && apt install -y jq astyle \
 	fi
 	@if [ "$(uname)" = "Darwin" ]; then \
 		brew update && brew install arduino-cli; \
@@ -33,10 +33,9 @@ upload_and_serial: upload serial
 
 push_github: format
 	git add . -A
-	git commit -am "EDITED: $(git diff --name-only | tr "\n" ",")"
+	git commit -am "EDITED: $(shell git diff --name-only | tr "\n" ",")"
 	git pull origin master --rebase
 	git push origin master
 
 format:
-	sudo apt install -y astyle
 	astyle lib/*/*.cpp
