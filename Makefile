@@ -20,20 +20,21 @@ port:
 	echo $(port)
 
 serial:
-	echo "Make sure to exit when done. The Serial port cannot be used concurrently, which includes uploading sketches"
-	sudo putty $(port) -serial -sercfg 9600,8,n,1,N &
+	# Make sure to exit when done. The Serial port cannot be used concurrently, which includes uploading sketches
+	sudo putty -serial -sercfg 9600,8,n,1,N $(port) &
 
 compile:
 	cd $(SKETCH) && \
 		arduino-cli compile \
 			--fqbn $(fqbn) \
-			$(shell find lib -maxdepth 1 -exec echo "--libraries ../{}" \;) \
-			$(shell find lib_vendored -maxdepth 1 -exec echo "--libraries ../{}" \;) \
+			$(shell find lib -type d -maxdepth 1 -exec echo "--libraries ../{}" \;) \
+			$(shell find lib_vendored -type d -maxdepth 1 -exec echo "--libraries ../{}" \;) \
 			$(COMPILE_ARGS)
 
-# Example: make upload led_strip_demo
+# Example:
+# 	SKETCH=led_strip_demo make upload
 upload: compile
-	echo "Uploading for sketch: $(SKETCH)"
+	# Uploading for sketch: $(SKETCH)
 	cd $(SKETCH) && sudo arduino-cli upload --port $(port) --fqbn $(fqbn)
 
 upload_and_serial: upload serial

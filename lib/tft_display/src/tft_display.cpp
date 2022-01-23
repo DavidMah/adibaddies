@@ -183,30 +183,48 @@ void tft_display_setup()
     Lcd_Init();
 }
 
-void tft_display_drawVerticalLine(unsigned int x, unsigned int y, unsigned int height, unsigned int color) {
+void tft_display_drawHorizontalLine(unsigned int x, unsigned int y, unsigned int width, unsigned int color) {
     unsigned int i,j;
-    Lcd_Write_Com(0x02c); //write_memory_start
+    Lcd_Write_Com(0x02c); // write_memory_start
     digitalWrite(LCD_RS_PIN,HIGH);
     digitalWrite(LCD_CS_PIN,LOW);
-    height+=x;
-    Address_set(x,y,height,y);
-    j=height*2;
-    for(i=1; i<=j; i++) {
+
+    Address_set(x, y, x+width, y);
+    for (int index = 0; index < width; index += 1) {
+        Lcd_Write_Data(color);
         Lcd_Write_Data(color);
     }
     digitalWrite(LCD_CS_PIN,HIGH);
 }
 
-void tft_display_drawHorizontalLine(unsigned int x, unsigned int y, unsigned int l, unsigned int c) {
+void tft_display_drawVerticalLine(unsigned int x, unsigned int y, unsigned int height, unsigned int color) {
     unsigned int i,j;
-    Lcd_Write_Com(0x02c); //write_memory_start
+    Lcd_Write_Com(0x02c); // write_memory_start
     digitalWrite(LCD_RS_PIN,HIGH);
     digitalWrite(LCD_CS_PIN,LOW);
-    l=l+y;
-    Address_set(x,y,x,l);
-    j=l*2;
-    for(i=1; i<=j; i++) {
-        Lcd_Write_Data(c);
+
+    Address_set(x, y, x, y+height);
+    for (int index = 0; index < height; index += 1) {
+        Lcd_Write_Data(color);
+        Lcd_Write_Data(color);
     }
     digitalWrite(LCD_CS_PIN,HIGH);
+}
+
+void tft_display_drawRectangle(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int color) {
+    for (int index = 0; index < height; index += 1) {
+        tft_display_drawHorizontalLine(x, y+index, width, color);
+    }
+}
+
+void tft_display_drawCircle(unsigned int x, unsigned int y, unsigned int radius, unsigned int color) {
+    int diameter = radius*2;
+    for (int index = 0; index < diameter; index += 1) {
+        int width = int(sqrt((radius*radius) - (radius - index)*(radius-index)));
+        tft_display_drawHorizontalLine(
+            radius-width,
+            y+index,
+            width*2,
+            color);
+    }
 }
