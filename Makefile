@@ -39,3 +39,4 @@ push_github: format
 
 format:
 	astyle lib/*/*.cpp
+	astyle */*.ino

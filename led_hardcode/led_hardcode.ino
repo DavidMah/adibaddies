@@ -9,13 +9,13 @@
 CRGB leds[NUM_LEDS];
 
 void setup() {
-  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
 }
 
 void loop() {
-  for (int ledIndex = 0; ledIndex < NUM_LEDS; ledIndex +=1 ) {
-    leds[ledIndex] = CRGB(RED,    GREEN, BLUE);
-  }
-  FastLED.show();
-	delay(1000);
+    for (int ledIndex = 0; ledIndex < NUM_LEDS; ledIndex +=1 ) {
+        leds[ledIndex] = CRGB(RED,    GREEN, BLUE);
+    }
+    FastLED.show();
+    delay(1000);
 }

@@ -21,36 +21,36 @@ float servoYPos = 90.0;
 int loopIndex = 0;
 
 void setup() {
-  Serial.begin(9600);
-	servoX.attach(SERVO_X_PIN);
-	servoY.attach(SERVO_Y_PIN);
+    Serial.begin(9600);
+    servoX.attach(SERVO_X_PIN);
+    servoY.attach(SERVO_Y_PIN);
 }
 
 void loop() {
-	#ifdef SERIAL_DEBUG
-	/* Serial.println("loopIndex: " + String(loopIndex));*/
-	#endif /* SERIAL_DEBUG */
-	float xInput = RATIO_TO_DELTA(JOY_TO_RATIO(analogRead(JOY_X_PIN))) * -1;
-	float yInput = RATIO_TO_DELTA(JOY_TO_RATIO(analogRead(JOY_Y_PIN)));
+#ifdef SERIAL_DEBUG
+    /* Serial.println("loopIndex: " + String(loopIndex));*/
+#endif /* SERIAL_DEBUG */
+    float xInput = RATIO_TO_DELTA(JOY_TO_RATIO(analogRead(JOY_X_PIN))) * -1;
+    float yInput = RATIO_TO_DELTA(JOY_TO_RATIO(analogRead(JOY_Y_PIN)));
 
-	if (abs(xInput) > 0.1) {
-		servoXPos = min(max(servoXPos + xInput, 0), 180);
-	}
+    if (abs(xInput) > 0.1) {
+        servoXPos = min(max(servoXPos + xInput, 0), 180);
+    }
 
-	if (abs(yInput) > 0.1) {
-		servoYPos = min(max(servoYPos + yInput, 0), 180);
-	}
+    if (abs(yInput) > 0.1) {
+        servoYPos = min(max(servoYPos + yInput, 0), 180);
+    }
 
-	#ifdef SERIAL_DEBUG
-	if (loopIndex % SERIAL_DEBUG_RATE == 0) {
-		Serial.println("input: " + String(xInput) + ":" + String(yInput));
-		Serial.println("position: " + String(servoXPos) + ":" + String(servoYPos));
-	}
-	#endif /* SERIAL_DEBUG */
+#ifdef SERIAL_DEBUG
+    if (loopIndex % SERIAL_DEBUG_RATE == 0) {
+        Serial.println("input: " + String(xInput) + ":" + String(yInput));
+        Serial.println("position: " + String(servoXPos) + ":" + String(servoYPos));
+    }
+#endif /* SERIAL_DEBUG */
 
-	servoX.write(int(servoXPos));
-	servoY.write(int(servoYPos));
+    servoX.write(int(servoXPos));
+    servoY.write(int(servoYPos));
 
-  delay(INTERVAL);
-	loopIndex += 1;
+    delay(INTERVAL);
+    loopIndex += 1;
 }
