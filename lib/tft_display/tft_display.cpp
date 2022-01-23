@@ -22,58 +22,58 @@
 
 
 void Lcd_Writ_Bus(unsigned char d) {
-  PORTD = (PORTD & B00000011) | ((d) & B11111100);
-  PORTB = (PORTB & B11111100) | ((d) & B00000011);
-  *(PORT_OUTPUT_REGISTER(DIGITAL_PIN_TO_PORT(LCD_WR_PIN))) &=  ~DIGITAL_PIN_TO_BIT_MASK(LCD_WR_PIN);
-  *(PORT_OUTPUT_REGISTER(DIGITAL_PIN_TO_PORT(LCD_WR_PIN)))|=  DIGITAL_PIN_TO_BIT_MASK(LCD_WR_PIN);
+    PORTD = (PORTD & B00000011) | ((d) & B11111100);
+    PORTB = (PORTB & B11111100) | ((d) & B00000011);
+    *(PORT_OUTPUT_REGISTER(DIGITAL_PIN_TO_PORT(LCD_WR_PIN))) &=  ~DIGITAL_PIN_TO_BIT_MASK(LCD_WR_PIN);
+    *(PORT_OUTPUT_REGISTER(DIGITAL_PIN_TO_PORT(LCD_WR_PIN)))|=  DIGITAL_PIN_TO_BIT_MASK(LCD_WR_PIN);
 }
 
 
 void Lcd_Write_Com(unsigned char VH)
 {
-  *(PORT_OUTPUT_REGISTER(DIGITAL_PIN_TO_PORT(LCD_RS_PIN))) &=  ~DIGITAL_PIN_TO_BIT_MASK(LCD_RS_PIN);//LCD_RS_PIN=0;
-  Lcd_Writ_Bus(VH);
+    *(PORT_OUTPUT_REGISTER(DIGITAL_PIN_TO_PORT(LCD_RS_PIN))) &=  ~DIGITAL_PIN_TO_BIT_MASK(LCD_RS_PIN);//LCD_RS_PIN=0;
+    Lcd_Writ_Bus(VH);
 }
 
 void Lcd_Write_Data(unsigned char VH)
 {
-  *(PORT_OUTPUT_REGISTER(DIGITAL_PIN_TO_PORT(LCD_RS_PIN)))|=  DIGITAL_PIN_TO_BIT_MASK(LCD_RS_PIN);//LCD_RS_PIN=1;
-  Lcd_Writ_Bus(VH);
+    *(PORT_OUTPUT_REGISTER(DIGITAL_PIN_TO_PORT(LCD_RS_PIN)))|=  DIGITAL_PIN_TO_BIT_MASK(LCD_RS_PIN);//LCD_RS_PIN=1;
+    Lcd_Writ_Bus(VH);
 }
 
 void Lcd_Write_Com_Data(unsigned char com,unsigned char dat)
 {
-  Lcd_Write_Com(com);
-  Lcd_Write_Data(dat);
+    Lcd_Write_Com(com);
+    Lcd_Write_Data(dat);
 }
 
 void Address_set(unsigned int x1,unsigned int y1,unsigned int x2,unsigned int y2)
 {
-        Lcd_Write_Com(0x2a);
-	Lcd_Write_Data(x1>>8);
-	Lcd_Write_Data(x1);
-	Lcd_Write_Data(x2>>8);
-	Lcd_Write_Data(x2);
-        Lcd_Write_Com(0x2b);
-	Lcd_Write_Data(y1>>8);
-	Lcd_Write_Data(y1);
-	Lcd_Write_Data(y2>>8);
-	Lcd_Write_Data(y2);
-	Lcd_Write_Com(0x2c);
+    Lcd_Write_Com(0x2a);
+    Lcd_Write_Data(x1>>8);
+    Lcd_Write_Data(x1);
+    Lcd_Write_Data(x2>>8);
+    Lcd_Write_Data(x2);
+    Lcd_Write_Com(0x2b);
+    Lcd_Write_Data(y1>>8);
+    Lcd_Write_Data(y1);
+    Lcd_Write_Data(y2>>8);
+    Lcd_Write_Data(y2);
+    Lcd_Write_Com(0x2c);
 }
 
 void Lcd_Init(void)
 {
-  digitalWrite(LCD_REST_PIN,HIGH);
-  delay(5);
-  digitalWrite(LCD_REST_PIN,LOW);
-  delay(15);
-  digitalWrite(LCD_REST_PIN,HIGH);
-  delay(15);
+    digitalWrite(LCD_REST_PIN,HIGH);
+    delay(5);
+    digitalWrite(LCD_REST_PIN,LOW);
+    delay(15);
+    digitalWrite(LCD_REST_PIN,HIGH);
+    delay(15);
 
-  digitalWrite(LCD_CS_PIN,HIGH);
-  digitalWrite(LCD_WR_PIN,HIGH);
-  digitalWrite(LCD_CS_PIN,LOW);  //CS
+    digitalWrite(LCD_CS_PIN,HIGH);
+    digitalWrite(LCD_WR_PIN,HIGH);
+    digitalWrite(LCD_CS_PIN,LOW);  //CS
 
     Lcd_Write_Com(0xCB);
     Lcd_Write_Data(0x39);
@@ -135,7 +135,7 @@ void Lcd_Init(void)
 
     Lcd_Write_Com(0x11);    //Exit Sleep
     delay(120);
-				
+
     Lcd_Write_Com(0x29);    //Display on
     Lcd_Write_Com(0x2c);
 }
@@ -147,66 +147,66 @@ void Lcd_Init(void)
 /* }*/
 
 void LCD_Clear(unsigned int j)
-{	
-  unsigned int i,m;
- Address_set(0,0,240,320);
-  //Lcd_Write_Com(0x02c); //write_memory_start
-  //digitalWrite(LCD_RS_PIN,HIGH);
-  digitalWrite(LCD_CS_PIN,LOW);
+{
+    unsigned int i,m;
+    Address_set(0,0,240,320);
+    //Lcd_Write_Com(0x02c); //write_memory_start
+    //digitalWrite(LCD_RS_PIN,HIGH);
+    digitalWrite(LCD_CS_PIN,LOW);
 
-  for(i=0;i<240;i++) {
-    for(m=0;m<320;m++)
-    {
-      Lcd_Write_Data(j>>8);
-      Lcd_Write_Data(j);
+    for(i=0; i<240; i++) {
+        for(m=0; m<320; m++)
+        {
+            Lcd_Write_Data(j>>8);
+            Lcd_Write_Data(j);
 
+        }
     }
-  }
-  digitalWrite(LCD_CS_PIN,HIGH);
+    digitalWrite(LCD_CS_PIN,HIGH);
 }
 
 void tft_display_setup()
 {
-  for(int pin=0; pin<10; pin+=1) {
-    pinMode(pin, OUTPUT);
-  }
-  pinMode(A0,OUTPUT);
-  pinMode(A1,OUTPUT);
-  pinMode(A2,OUTPUT);
-  pinMode(A3,OUTPUT);
-  pinMode(A4,OUTPUT);
-  digitalWrite(A0, HIGH);
-  digitalWrite(A1, HIGH);
-  digitalWrite(A2, HIGH);
-  digitalWrite(A3, HIGH);
-  digitalWrite(A4, HIGH);
-  Lcd_Init();
+    for(int pin=0; pin<10; pin+=1) {
+        pinMode(pin, OUTPUT);
+    }
+    pinMode(A0,OUTPUT);
+    pinMode(A1,OUTPUT);
+    pinMode(A2,OUTPUT);
+    pinMode(A3,OUTPUT);
+    pinMode(A4,OUTPUT);
+    digitalWrite(A0, HIGH);
+    digitalWrite(A1, HIGH);
+    digitalWrite(A2, HIGH);
+    digitalWrite(A3, HIGH);
+    digitalWrite(A4, HIGH);
+    Lcd_Init();
 }
 
-void tft_display_drawVerticalLine(unsigned int x, unsigned int y, unsigned int height, unsigned int color) {	
-  unsigned int i,j;
-  Lcd_Write_Com(0x02c); //write_memory_start
-  digitalWrite(LCD_RS_PIN,HIGH);
-  digitalWrite(LCD_CS_PIN,LOW);
-  height+=x;
-  Address_set(x,y,height,y);
-  j=height*2;
-  for(i=1;i<=j;i++) {
-    Lcd_Write_Data(color);
-  }
-  digitalWrite(LCD_CS_PIN,HIGH);
+void tft_display_drawVerticalLine(unsigned int x, unsigned int y, unsigned int height, unsigned int color) {
+    unsigned int i,j;
+    Lcd_Write_Com(0x02c); //write_memory_start
+    digitalWrite(LCD_RS_PIN,HIGH);
+    digitalWrite(LCD_CS_PIN,LOW);
+    height+=x;
+    Address_set(x,y,height,y);
+    j=height*2;
+    for(i=1; i<=j; i++) {
+        Lcd_Write_Data(color);
+    }
+    digitalWrite(LCD_CS_PIN,HIGH);
 }
 
-void tft_display_drawHorizontalLine(unsigned int x, unsigned int y, unsigned int l, unsigned int c) {	
-  unsigned int i,j;
-  Lcd_Write_Com(0x02c); //write_memory_start
-  digitalWrite(LCD_RS_PIN,HIGH);
-  digitalWrite(LCD_CS_PIN,LOW);
-  l=l+y;
-  Address_set(x,y,x,l);
-  j=l*2;
-  for(i=1;i<=j;i++) {
-    Lcd_Write_Data(c);
-  }
-  digitalWrite(LCD_CS_PIN,HIGH);
+void tft_display_drawHorizontalLine(unsigned int x, unsigned int y, unsigned int l, unsigned int c) {
+    unsigned int i,j;
+    Lcd_Write_Com(0x02c); //write_memory_start
+    digitalWrite(LCD_RS_PIN,HIGH);
+    digitalWrite(LCD_CS_PIN,LOW);
+    l=l+y;
+    Address_set(x,y,x,l);
+    j=l*2;
+    for(i=1; i<=j; i++) {
+        Lcd_Write_Data(c);
+    }
+    digitalWrite(LCD_CS_PIN,HIGH);
 }

@@ -31,11 +31,12 @@ serial:
 
 upload_and_serial: upload serial
 
-push_github:
+push_github: format
 	git add . -A
-	git commit -am "moar stuff"
+	git commit -am "EDITED: $(git diff --name-only | tr "\n" ",")"
 	git pull origin master --rebase
 	git push origin master
 
 format:
 	sudo apt install -y astyle
+	astyle lib/*/*.cpp
