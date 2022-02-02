@@ -2,11 +2,10 @@
 port := $(shell arduino-cli board list --format yaml | yq eval -o json | jq -r '.[] | select(.matchingboards[0].name | index("Arduino")) | .port.address')
 fqbn := $(shell arduino-cli board list --format yaml | yq eval -o json | jq -r '.[] | select(.matchingboards[0].name | index("Arduino")) | .matchingboards[0].fqbn')
 
-
 install:
 	@if [ "$(uname)" = "Linux" ]; then\
 		sudo snap install arduino-cli yq; \
-		sudo apt update && apt install -y jq astyle \
+		sudo apt update && apt install -y jq astyle
 	fi
 	@if [ "$(uname)" = "Darwin" ]; then \
 		brew update && brew install arduino-cli; \
@@ -16,14 +15,19 @@ install:
 	arduino-cli core install arduino:avr
 	arduino-cli core install arduino:sam
 
-port:
-	echo $(port)
+validate_port:
+	@if [ "$(port)" = "" ]; then echo "No connected Arduino detected!\nEither it is not plugged in or it is crashing (OOM or power overdraw)"; exit 1; fi
+	# Port validated: $(port)
 
-serial:
+validate_sketch:
+	@if [ "$(SKETCH)" = "" ]; then echo "SKETCH env var required"; exit 1; fi
+	# SKETCH validated: $(SKETCH)
+
+serial: validate_port
 	# Make sure to exit when done. The Serial port cannot be used concurrently, which includes uploading sketches
 	sudo putty -serial -sercfg 9600,8,n,1,N $(port) &
 
-compile:
+compile: validate_sketch
 	cd $(SKETCH) && \
 		arduino-cli compile \
 			--fqbn $(fqbn) \
@@ -33,7 +37,7 @@ compile:
 
 # Example:
 # 	SKETCH=led_strip_demo make upload
-upload: compile
+upload: validate_port compile
 	# Uploading for sketch: $(SKETCH)
 	cd $(SKETCH) && sudo arduino-cli upload --port $(port) --fqbn $(fqbn)
 
